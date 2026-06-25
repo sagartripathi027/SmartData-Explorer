@@ -2,6 +2,9 @@
 
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import os
 
 # SECTION 1: DATASET OVERVIEW
 
@@ -268,7 +271,7 @@ def get_correlation_matrix(df):
 
 # SECTION 7: FINAL INSIGHTS
 
-def generate_insights(df):
+def generate_rule_based_insights(df):
     """
     Auto-generate plain-English insights by scanning:
     - High correlations between numeric columns (|r| > 0.7)
@@ -385,8 +388,29 @@ def analyze_data(df):
 
     # 7. FINAL INSIGHTS 
     report.append(separator + "💡 FINAL INSIGHTS")
-    report.append(generate_insights(df))
+    report.append(generate_rule_based_insights(df))
 
     report.append("\n" + "=" * 50)
 
     return "\n".join(report)
+
+def generate_heatmap(df):
+    import uuid
+
+    numeric_df = df.select_dtypes(include="number")
+
+    if numeric_df.shape[1] < 2:
+        return None
+
+    os.makedirs("static", exist_ok=True)
+
+    filename = f"heatmap_{uuid.uuid4().hex}.png"
+    path = os.path.join("static", filename)
+
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(numeric_df.corr(), annot=True, cmap="coolwarm")
+
+    plt.savefig(path)
+    plt.close()
+
+    return path

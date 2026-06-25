@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Analysis Report</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1 class="title">📊 Analysis Report</h1>
+
+  <!-- Dataset Preview -->
+  <div class="card">
+    <h2>Dataset Preview</h2>
+    <div class="table-container">
+      {{ preview|safe }}
+    </div>
+  </div>
+
+  <!-- Analysis Output -->
+  <div class="card">
+    <h2>Analysis Output</h2>
+    <div class="result-box">
+      <pre>{{ result }}</pre>
+    </div>
+  </div>
+
+  <!-- Heatmap -->
+  {% if heatmap %}
+  <div class="card">
+    <h2>Correlation Heatmap</h2>
+    <img src="{{ url_for('static', filename=heatmap.split('static/')[-1]) }}" class="heatmap">
+  </div>
+  {% endif %}
+
+  <!-- Back Button -->
+  <a href="/" class="back-btn">← Analyze Another Dataset</a>
+
+</div>
+
+</body>
+</html>

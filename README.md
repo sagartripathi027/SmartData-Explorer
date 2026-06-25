@@ -1,4 +1,4 @@
-# AI Data Science Agent
+# SmartData-Explorer
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![Flask](https://img.shields.io/badge/Flask-2.0-green)
@@ -7,7 +7,7 @@
 
 ## Project Overview
 
-AI Data Science Agent is a lightweight web application that automates structured dataset analysis using Python, Pandas, and NumPy. Users can upload CSV datasets and instantly receive cleaned data summaries, statistical insights, missing value analysis, and feature-level information through a simple web interface.
+SmartData-Explorer is a lightweight web application that automates structured dataset analysis using Python, Pandas, and NumPy. Users can upload CSV datasets and instantly receive cleaned data summaries, statistical insights, missing value analysis, and feature-level information through a simple web interface.
 
 The project is designed to simplify exploratory data analysis (EDA) workflows and support data-driven decision-making.
 
@@ -43,7 +43,7 @@ The project is designed to simplify exploratory data analysis (EDA) workflows an
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/sagartripathi027/Data-Science-Agent-1.git
+git clone https://github.com/sagartripathi027/SmartData-Explorer.git
 ```
 
 ### 2. Install Dependencies
@@ -88,7 +88,7 @@ http://127.0.0.1:5000
 ## Folder Structure
 
 ```text
-AI-Data-Science-Agent/
+SmartData-Explorer/
 │
 ├── app.py
 ├── analysis.py

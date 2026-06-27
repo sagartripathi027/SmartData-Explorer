@@ -1,128 +1,49 @@
-# SmartData-Explorer
+# 🚀 SmartData Explorer
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![Flask](https://img.shields.io/badge/Flask-2.0-green)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
-## Project Overview
-
-SmartData-Explorer is a lightweight web application that automates structured dataset analysis using Python, Pandas, and NumPy. Users can upload CSV datasets and instantly receive cleaned data summaries, statistical insights, missing value analysis, and feature-level information through a simple web interface.
-
-The project is designed to simplify exploratory data analysis (EDA) workflows and support data-driven decision-making.
+## 📌 Overview
+SmartData Explorer is a Flask-based web application that automates **Exploratory Data Analysis (EDA)** for CSV files. Users can upload datasets and instantly get data summary, missing value analysis, statistical insights, outlier detection, and correlation heatmap.
 
 ---
 
-## Features
+## 🌐 Live Demo
+https://smartdata-explorer.onrender.com
 
-* Upload and analyze CSV datasets
-* Automated data cleaning and preprocessing
-* Missing value detection
-* Statistical summary generation
-* Data type identification
-* Correlation analysis
-* Simple and responsive web interface
-* Automated report generation
+## 💻 GitHub Repository
+https://github.com/sagartripathi027/SmartData-Explorer
 
 ---
 
-## Technologies Used
-
-* Python
-* Flask
-* Pandas
-* NumPy
-* HTML
-* CSS
-* JavaScript
+## ⚙️ Features
+- Upload CSV datasets  
+- Automatic data cleaning  
+- Missing value detection  
+- Descriptive statistics  
+- Outlier detection  
+- Correlation matrix  
+- Correlation heatmap visualization  
 
 ---
 
-## Installation Steps
+## 🧠 Tech Stack
+- Python  
+- Flask  
+- Pandas  
+- NumPy  
+- HTML  
+- CSS  
+- JavaScript  
 
-### 1. Clone Repository
+---
+
+## 🚀 Installation & Run
 
 ```bash
 git clone https://github.com/sagartripathi027/SmartData-Explorer.git
-```
-
-### 2. Install Dependencies
-
-```bash
+cd SmartData-Explorer
 pip install -r requirements.txt
-```
-
----
-
-## How to Run
-
-Start the Flask server:
-
-```bash
 python app.py
-```
-
-Open browser:
-
-```text
-http://127.0.0.1:5000
-```
-
----
-
-## Example Workflow
-
-1. Open the application in browser
-2. Upload a CSV dataset
-3. System processes the dataset automatically
-4. View:
-
-   * dataset shape
-   * missing values
-   * statistical summaries
-   * correlations
-5. Generate insights for analysis
-
----
-
-## Folder Structure
-
-```text
-SmartData-Explorer/
-│
-├── app.py
-├── analysis.py
-├── requirements.txt
-├── README.md
-│
-├── data/
-├── uploads/
-├── reports/
-│
-├── templates/
-│   └── index.html
-│
-└── static/
-    ├── style.css
-    └── script.js
-```
-
----
-## Screenshots
-
-### Home Page
-
-![Home Page](screenshots/home.png)
-
-### Analysis Result
-
-![Result Page](screenshots/result.png)
-
-## 🚀 What's Coming Next
-
-- [ ] Support for Excel (.xlsx) file uploads
-- [ ] AI-generated insights using LLM
-- [ ] Data visualization charts (bar, pie, heatmap)
-- [ ] Export analysis report as PDF
-- [ ] User authentication and history
-- [ ] Deploy on cloud (AWS / Render)

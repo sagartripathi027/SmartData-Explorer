@@ -47,3 +47,32 @@ git clone https://github.com/sagartripathi027/SmartData-Explorer.git
 cd SmartData-Explorer
 pip install -r requirements.txt
 python app.py
+SmartData-Explorer/
+├── app.py
+├── analysis.py
+├── requirements.txt
+├── data/
+├── uploads/
+├── reports/
+├── templates/
+│   └── index.html
+└── static/
+    ├── style.css
+    └── script.js
+📊 Workflow
+Upload CSV file
+System processes dataset
+Generates:
+Summary
+Missing values report
+Statistical insights
+Correlation heatmap
+Displays results instantly
+
+🚀 Future Improvements
+Excel (.xlsx) support
+AI-generated insights
+Advanced visualizations (bar, pie charts)
+PDF report export
+User authentication system
+Cloud deployment (AWS / Render)

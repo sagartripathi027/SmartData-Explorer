@@ -59,7 +59,8 @@ SmartData-Explorer/
 └── static/
     ├── style.css
     └── script.js
-📊 Workflow
+
+## 📊 Workflow
 Upload CSV file
 System processes dataset
 Generates:
@@ -69,7 +70,7 @@ Statistical insights
 Correlation heatmap
 Displays results instantly
 
-🚀 Future Improvements
+##🚀 Future Improvements
 Excel (.xlsx) support
 AI-generated insights
 Advanced visualizations (bar, pie charts)

@@ -1,213 +1,246 @@
 # 🚀 SmartData Explorer
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square)
-![Flask](https://img.shields.io/badge/Flask-2.0+-green?style=flat-square)
-![Pandas](https://img.shields.io/badge/Pandas-Latest-orange?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)
-![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
+A Python-powered web application for **Exploratory Data Analysis (EDA), data preprocessing, visualization, and machine learning** — all through a simple web interface.
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Flask-Web%20Framework-black?style=flat-square&logo=flask" alt="Flask">
+  <img src="https://img.shields.io/badge/Pandas-Data%20Analysis-150458?style=flat-square&logo=pandas" alt="Pandas">
+  <img src="https://img.shields.io/badge/Scikit--learn-Machine%20Learning-F7931E?style=flat-square&logo=scikitlearn&logoColor=white" alt="Scikit-learn">
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License">
+</p>
 
 ## 📌 Overview
 
-**SmartData Explorer** is a Flask-based web application that automates **Exploratory Data Analysis (EDA)** for CSV files. It engineers an end-to-end data processing pipeline for cleaning, transforming, and analyzing structured datasets with **1000+ records** using Pandas and NumPy. Automated data cleaning and validation workflows reduce manual effort by **50%**, while built-in statistical analysis — correlation analysis, distribution analysis, and anomaly detection — surfaces actionable insights instantly, without writing a single line of code!
+**SmartData Explorer** is a Flask-based application designed to simplify data analysis and machine learning workflows. Users can upload CSV datasets, inspect data quality, explore statistical summaries, visualize relationships between variables, and train machine learning models through a web interface.
 
-Perfect for data analysts, researchers, and anyone looking to quickly understand their data.
+The application combines Pandas and NumPy for data processing, statistical analysis for discovering patterns, Matplotlib and other visualization tools where applicable, and Scikit-learn pipelines for machine learning workflows.
 
----
+It also provides a structured results dashboard, model download functionality, and temporary file management.
 
 ## 🌐 Live Demo & Repository
 
-- **Live Application**: [SmartData Explorer on Render](https://smartdata-explorer.onrender.com)
-- **GitHub Repository**: [sagartripathi027/SmartData-Explorer](https://github.com/sagartripathi027/SmartData-Explorer)
+- **Live Application:** [SmartData Explorer](https://smartdata-explorer.onrender.com)
+- **GitHub Repository:** [sagartripathi027/SmartData-Explorer](https://github.com/sagartripathi027/SmartData-Explorer)
 
----
+> Note: The live application's available features may differ from the latest local development version.
 
 ## ✨ Key Features
 
-- ✅ **CSV File Upload** - Drag and drop or browse to upload your datasets
-- ✅ **End-to-End Data Pipeline** - Cleans, transforms, and analyzes structured datasets with **1000+ records**
-- ✅ **Automated Data Cleaning & Validation** - Reduces manual effort by **50%**
-- ✅ **Missing Value Detection** - Identify and visualize missing data patterns
-- ✅ **Descriptive Statistics** - Mean, median, mode, std deviation, quartiles
-- ✅ **Outlier / Anomaly Detection** - Identify anomalies using statistical methods
-- ✅ **Correlation Analysis** - Understand relationships between variables via a correlation matrix
-- ✅ **Distribution Analysis** - Explore the underlying distribution of each variable
-- ✅ **Interactive Heatmap** - Beautiful visualization of correlations
-- ✅ **Instant Results** - Fast processing and real-time analysis
-- ✅ **User-Friendly Interface** - Clean and intuitive web UI
+### 📂 Data Upload & Preprocessing
+- Upload CSV datasets through the web interface.
+- Validate uploaded data before analysis.
+- Inspect missing values and dataset characteristics.
+- Perform data cleaning and preprocessing.
+- Handle supported numeric and categorical features.
 
----
+### 📊 Exploratory Data Analysis (EDA)
+- Generate descriptive statistical summaries.
+- Analyze distributions of numerical variables.
+- Explore correlations between numeric features.
+- Visualize relationships through correlation heatmaps.
+- Identify potential outliers and anomalies.
+- Present analysis results in a structured dashboard.
+
+### 🤖 Machine Learning
+- Configure supported machine learning tasks.
+- Train models using the application's ML workflow.
+- Apply preprocessing through Scikit-learn pipelines.
+- Separate training and evaluation data to help prevent data leakage.
+- Support applicable classification and regression workflows.
+- Download trained models through the model download feature.
+
+*Available algorithms and configuration options depend on the implemented model-training workflow.*
+
+### 🔒 File Handling
+- Generate unique identifiers for uploaded files.
+- Manage temporary uploaded datasets and generated artifacts.
+- Automatically clean up eligible temporary files.
+- Keep uploaded data separate from the analysis interface.
 
 ## 🧠 Tech Stack
 
-### Backend
-- **Python** 3.10+ - Core programming language
-- **Flask** 2.0+ - Web framework
-- **Pandas** - Data manipulation and analysis
-- **NumPy** - Numerical computing
-- **SciPy** - Scientific computing and statistics
-- **Plotly** - Interactive visualizations
+| Category | Technologies |
+|---|---|
+| Language | Python |
+| Backend | Flask |
+| Data Processing | Pandas, NumPy |
+| Machine Learning | Scikit-learn |
+| Visualization | Matplotlib, Plotly (where used) |
+| Frontend | HTML5, CSS3, JavaScript |
+| Data Validation | Python-based validation and preprocessing |
+| Deployment | Render |
 
-### Frontend
-- **HTML5** - Markup structure
-- **CSS3** - Styling and responsive design
-- **JavaScript (ES6+)** - Interactivity and client-side logic
-
-### Deployment
-- **Render** - Cloud hosting platform
-
----
-
-## 📦 Installation & Setup
+## ⚙️ Installation & Setup
 
 ### Prerequisites
-- Python 3.10 or higher
-- pip (Python package manager)
+
+- Python 3.10 or a compatible version supported by the project's dependencies
+- pip
 - Git
 
-### Step-by-Step Installation
+### 1. Clone the repository
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/sagartripathi027/SmartData-Explorer.git
-   cd SmartData-Explorer
-   ```
+```bash
+git clone https://github.com/sagartripathi027/SmartData-Explorer.git
+cd SmartData-Explorer
+```
 
-2. **Create a virtual environment** (recommended)
-   ```bash
-   python -m venv venv
-   
-   # Activate virtual environment
-   # On Windows:
-   venv\Scripts\activate
-   # On macOS/Linux:
-   source venv/bin/activate
-   ```
+### 2. Create a virtual environment
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+**Windows (PowerShell):**
 
-4. **Run the application**
-   ```bash
-   python app.py
-   ```
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+```
 
-5. **Open in browser**
-   ```
-   Navigate to http://localhost:5000
-   ```
+If PowerShell blocks activation, use Command Prompt:
 
----
+```bat
+venv\Scripts\activate.bat
+```
+
+**macOS/Linux:**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 4. Run the application
+
+```bash
+python app.py
+```
+
+### 5. Open the application
+
+Visit:
+
+[http://127.0.0.1:5000](http://127.0.0.1:5000)
+
+Make sure the dependencies are installed and any required environment variables are configured before starting the application.
 
 ## 📁 Project Structure
 
-```
+The following is a representative structure. Refer to the actual repository for the complete and current file layout.
+
+```text
 SmartData-Explorer/
 │
-├── 📄 app.py                    # Main Flask application
-├── 📄 analysis.py               # Data analysis logic and functions
-├── 📄 requirements.txt           # Python dependencies
+├── app.py                 # Flask application and routes
+├── analysis.py            # Data analysis and EDA logic
+├── ml_engine.py           # Machine learning pipeline
+├── requirements.txt       # Python dependencies
 │
-├── 📂 data/                      # Sample datasets (optional)
-├── 📂 uploads/                   # Uploaded CSV files (temporary)
-├── 📂 reports/                   # Generated analysis reports
+├── templates/             # HTML templates
+│   ├── index.html         # Main interface
+│   └── result.html        # Analysis results, if present
 │
-├── 📂 templates/                 # HTML templates
-│   └── 📄 index.html            # Main web interface
+├── static/                # CSS, JavaScript and generated assets
 │
-├── 📂 static/                    # Static files
-│   ├── 📄 style.css             # Stylesheet
-│   └── 📄 script.js             # JavaScript functionality
+├── uploads/               # Temporary uploaded datasets
+├── data/                  # Sample or project data, if present
 │
-└── 📄 README.md                  # Project documentation
+└── README.md              # Project documentation
 ```
 
----
+**Important:** Runtime folders, templates, and generated artifacts may vary by version. Do not commit private datasets, uploaded user files, generated secrets, or local environment files.
 
-## 🚀 Future Improvements
+## 🔐 Configuration & Security
 
-### Near Term
-- [ ] **Excel (.xlsx) Support** - Extend beyond CSV to Excel files
-- [ ] **Multiple File Formats** - Support JSON, Parquet, TSV
-- [ ] **Advanced Visualizations** - Bar charts, pie charts, scatter plots
-- [ ] **Downloadable Reports** - Export analysis as PDF/HTML
+- Keep secret keys and credentials outside source control.
+- Store local environment variables in an untracked `.env` file when supported by the application.
+- Configure upload limits and file validation according to the application's settings.
+- Use unique filenames for uploaded files.
+- Clean up expired temporary files and generated artifacts.
+- Do not upload sensitive or confidential datasets to a public deployment.
 
-### Mid Term
-- [ ] **AI-Generated Insights** - LLM integration for intelligent data summaries
-- [ ] **Data Transformation Tools** - Column operations, filtering, aggregation
-- [ ] **User Authentication** - Create accounts and save analysis history
-- [ ] **Data Comparison** - Compare multiple datasets side-by-side
+Example `.gitignore` entries:
 
-### Long Term
-- [ ] **API Mode** - RESTful API for external integrations
-- [ ] **Cloud Deployment** - AWS S3 integration for large files
-- [ ] **Real-time Collaboration** - Share and collaborate on analysis
-- [ ] **Advanced ML Features** - Predictive modeling, clustering, classification
-- [ ] **Mobile App** - Native mobile application
-- [ ] **Data Quality Dashboard** - Comprehensive data quality metrics
-
----
-
-## 🛠️ Configuration & Customization
-
-### Environment Variables
-Create a `.env` file in the root directory:
-```env
-FLASK_ENV=development
-FLASK_DEBUG=True
-MAX_UPLOAD_SIZE=50MB
+```gitignore
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.env
+uploads/*
+!uploads/.gitkeep
+instance/
+.pytest_cache/
 ```
 
----
+Review these entries against the actual project before applying them. Add other generated-file exclusions only when appropriate, and never ignore source files required by the application.
 
-## 📋 Requirements
+## 🧪 Testing & Verification
 
-See `requirements.txt` for complete dependencies:
+Before deploying a change, verify the relevant workflows:
+
+- [ ] Application starts successfully.
+- [ ] CSV upload and validation work.
+- [ ] EDA results display correctly.
+- [ ] Correlation heatmaps and statistical summaries render correctly.
+- [ ] Classification and regression workflows handle supported target columns.
+- [ ] Invalid input produces understandable error messages.
+- [ ] Model downloads work when a model has been trained.
+- [ ] Temporary file cleanup behaves as expected.
+- [ ] No secrets or private datasets are committed.
+
+## 🛣️ Future Improvements
+
+Potential enhancements for future versions:
+
+- [ ] Excel and additional dataset format support.
+- [ ] More configurable data transformations.
+- [ ] Additional visualization options.
+- [ ] Downloadable analysis reports.
+- [ ] More machine learning algorithms and evaluation metrics.
+- [ ] Improved data quality summaries.
+- [ ] Persistent analysis history, if required.
+- [ ] Expanded automated testing and deployment checks.
+
+## 📋 Dependencies
+
+Install dependencies from the maintained requirements file:
+
+```bash
+pip install -r requirements.txt
 ```
-Flask==2.0.0
-pandas==1.3.0
-numpy==1.21.0
-scipy==1.7.0
-plotly==5.0.0
-```
+
+The `requirements.txt` file is the source of truth for dependency versions. Avoid documenting hard-coded versions here unless they match the current environment.
 
 ## 📝 License
 
-This project is licensed under the **MIT License** - see the LICENSE file for details.
-
----
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details, if included in the repository.
 
 ## 👨‍💻 Author
 
 **Sagar Tripathi**
-- GitHub: [@sagartripathi027](https://github.com/sagartripathi027)
-- Project: [SmartData Explorer](https://github.com/sagartripathi027/SmartData-Explorer)
 
----
+- **GitHub:** [@sagartripathi027](https://github.com/sagartripathi027)
+- **Project Repository:** [SmartData Explorer](https://github.com/sagartripathi027/SmartData-Explorer)
 
 ## 🙏 Acknowledgments
 
-- Flask community for the amazing web framework
-- Pandas & NumPy teams for data science tools
-- Plotly for beautiful interactive visualizations
-- All contributors and users of this project
+- [Flask](https://flask.palletsprojects.com/) for the web framework.
+- [Pandas](https://pandas.pydata.org/docs/) and [NumPy](https://numpy.org/doc/) for data processing.
+- [Scikit-learn](https://scikit-learn.org/stable/) for machine learning tools.
+- [Matplotlib](https://matplotlib.org/) and [Plotly](https://plotly.com/python/) for visualization.
 
 ---
 
-## 📚 Resources
+<p align="center">
+  If you find this project useful, consider giving it a ⭐ on GitHub.
+</p>
 
-- [Flask Documentation](https://flask.palletsprojects.com/)
-- [Pandas Documentation](https://pandas.pydata.org/docs/)
-- [NumPy Documentation](https://numpy.org/doc/)
-- [Plotly Documentation](https://plotly.com/python/)
-
----
-
-<div align="center">
-
-**Give this project a ⭐ if it helped you!**
-
-Made with ❤️ by [Sagar Tripathi](https://github.com/sagartripathi027)
-
-</div>
+<p align="center">
+  Built with ❤️ by <a href="https://github.com/sagartripathi027">Sagar Tripathi</a>
+</p>

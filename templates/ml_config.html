@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Configure ML Model</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text"><span class="brand-blue">SmartData</span> <span>Explorer</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/documentation" class="nav-link">Documentation</a>
+      <a href="/api" class="nav-link">API</a>
+      <a href="/" class="btn-dashboard">Dashboard</a>
+    </div>
+  </nav>
+
+<div class="container">
+  <h1 class="result-title" style="color: white; margin-bottom: 5px;">🤖 Configure ML Model</h1>
+  <p style="color: var(--text-light); margin-bottom: 20px;">Dataset: <strong>{{ dataset_name }}</strong></p>
+
+  {% if error %}
+  <div class="result-box" style="color: #ef4444; border: 1px solid #ef4444; margin-bottom: 20px;">
+    <strong>Error:</strong> {{ error }}
+  </div>
+  {% endif %}
+
+  <form action="/train" method="POST" class="result-card">
+    <div style="margin-bottom: 20px;">
+      <label class="result-title" style="display: block; font-size: 1.1rem;">1. Select Target Column</label>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Choose the column you want the model to predict.</p>
+      <select name="target_col" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--card-border);">
+        <option value="" disabled selected>Select a target column...</option>
+        {% for col in columns %}
+        <option value="{{ col.name }}">{{ col.name }} ({{ col.type }}, {{ col.unique_count }} unique)</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+      <label class="result-title" style="display: block; font-size: 1.1rem;">2. Select Task Type</label>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+        <strong>Classification:</strong> Predict a category (e.g., Yes/No, Red/Green/Blue).<br>
+        <strong>Regression:</strong> Predict a continuous number (e.g., Price, Age).
+      </p>
+      <div style="display: flex; gap: 20px;">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+          <input type="radio" name="task_type" value="classification" required> Classification
+        </label>
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+          <input type="radio" name="task_type" value="regression" required> Regression
+        </label>
+      </div>
+    </div>
+
+    <button type="submit" class="analyze-btn" style="background: linear-gradient(to right, #3b82f6, #a855f7);">
+      Start Training 🚀
+    </button>
+  </form>
+
+  <a href="/" class="back-btn">← Cancel</a>
+</div>
+</body>
+</html>

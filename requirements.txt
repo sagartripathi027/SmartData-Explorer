@@ -4,3 +4,5 @@ numpy==1.23.5
 matplotlib==3.7.1
 seaborn==0.12.2
 gunicorn==20.1.0
+scikit-learn
+joblib

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ML Results</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text"><span class="brand-blue">SmartData</span> <span>Explorer</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/documentation" class="nav-link">Documentation</a>
+      <a href="/api" class="nav-link">API</a>
+      <a href="/" class="btn-dashboard">Dashboard</a>
+    </div>
+  </nav>
+
+<div class="container">
+  <h1 class="result-title" style="color: white; margin-bottom: 5px;">🎯 ML Training Results</h1>
+  <p style="color: var(--text-light); margin-bottom: 20px;">Dataset: <strong>{{ dataset_name }}</strong></p>
+
+  <div class="result-card">
+    <h2 class="result-title">Model Overview</h2>
+    <p><strong>Target Column:</strong> {{ results.target_col }}</p>
+    <p><strong>Task Type:</strong> {{ results.task_type | title }}</p>
+    <p><strong>Training Split:</strong> {{ results.train_size }} rows</p>
+    <p><strong>Testing Split:</strong> {{ results.test_size }} rows</p>
+    <p><strong>Features Used:</strong> {{ results.feature_count }}</p>
+    {% if results.dropped_cols %}
+    <p style="color: #f59e0b; margin-top: 10px;"><strong>Note:</strong> Dropped high-cardinality categorical columns to prevent memory issues: {{ results.dropped_cols | join(', ') }}</p>
+    {% endif %}
+  </div>
+
+  <div class="result-card">
+    <h2 class="result-title">Model Performance (Test Set)</h2>
+    {% if results.task_type == 'classification' %}
+      <p><strong>Accuracy:</strong> {{ (results.accuracy * 100) | round(2) }}%</p>
+      <p><strong>F1-Score:</strong> {{ results.f1_score }}</p>
+    {% else %}
+      <p><strong>R² Score:</strong> {{ results.r2 }}</p>
+      <p><strong>RMSE:</strong> {{ results.rmse }}</p>
+    {% endif %}
+
+    <div style="margin-top: 15px;">
+      <img src="{{ url_for('static', filename=results.plot_url) }}" class="heatmap" style="max-width: 100%; border-radius: 10px;">
+    </div>
+  </div>
+
+  <div class="result-card">
+    <h2 class="result-title">Sample Predictions</h2>
+    <div class="table-container">
+      {{ results.sample_predictions_html | safe }}
+    </div>
+  </div>
+
+  <div class="result-card" style="text-align: center;">
+    <h2 class="result-title">💾 Download Model</h2>
+    <p style="margin-bottom: 15px; font-size: 0.9rem; color: var(--text-muted);">
+      Download the trained pipeline (including preprocessing and model) as a joblib/pickle file.<br>
+      <em>Note: Only load pickle files from trusted sources.</em>
+    </p>
+    <a href="/download-model/{{ results.model_id }}" class="analyze-btn" style="display: inline-block; width: auto; padding: 10px 20px; background: #10b981;">Download Model (.pkl)</a>
+  </div>
+
+  <a href="/" class="back-btn">← Analyze Another Dataset</a>
+</div>
+
+</body>
+</html>

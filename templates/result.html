@@ -3,44 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <title>Analysis Report</title>
-
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
-<div class="container">
+  <nav>
+    <a href="/" class="nav-logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text"><span class="brand-blue">SmartData</span> <span>Explorer</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="/documentation" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" /></svg>
+        Documentation
+      </a>
+      <a href="/api" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" /></svg>
+        API
+      </a>
+      <a href="/" class="btn-dashboard">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" /></svg>
+        Dashboard
+      </a>
+    </div>
+  </nav>
 
-  <h1 class="title">📊 Analysis Report</h1>
+
+<div class="container">
+  <h1 class="result-title" style="color: white;">📊 Analysis Report</h1>
+
+  <!-- Top Level Insights -->
+  {% if results.insights %}
+  <div class="result-card">
+    <h2 class="result-title">💡 Key Insights</h2>
+    <ul>
+      {% for insight in results.insights %}
+      <li>{{ insight }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- Dataset Overview -->
+  <div class="result-card">
+    <h2 class="result-title">📋 Dataset Overview</h2>
+    <p><strong>Rows:</strong> {{ results.shape.rows }} | <strong>Columns:</strong> {{ results.shape.cols }}</p>
+    <div class="table-container">
+      {{ results.overview_html|safe }}
+    </div>
+  </div>
+
+  <!-- Data Cleaning -->
+  <div class="result-card">
+    <h2 class="result-title">🧹 Data Cleaning & Preprocessing</h2>
+    <div class="result-box">
+      <p><strong>Duplicates:</strong> {{ results.dup_summary }}</p>
+      <p><strong>Missing Values:</strong><br><pre>{{ results.fill_summary }}</pre></p>
+      <p><strong>Preprocessing:</strong><br><pre>{{ results.preprocess_summary }}</pre></p>
+    </div>
+  </div>
 
   <!-- Dataset Preview -->
-  <div class="card">
-    <h2>Dataset Preview</h2>
+  <div class="result-card">
+    <h2 class="result-title">👀 Cleaned Data Preview</h2>
     <div class="table-container">
       {{ preview|safe }}
     </div>
   </div>
 
-  <!-- Analysis Output -->
-  <div class="card">
-    <h2>Analysis Output</h2>
-    <div class="result-box">
-      <pre>{{ result }}</pre>
+  <!-- Statistical Summary -->
+  <div class="result-card">
+    <h2 class="result-title">📊 Statistical Summary (Numeric)</h2>
+    <div class="table-container">
+      {{ results.stats_html|safe }}
     </div>
   </div>
 
+  <!-- Outliers -->
+  <div class="result-card">
+    <h2 class="result-title">🔍 Outliers Detection (IQR Method)</h2>
+    <div class="table-container">
+      {{ results.outliers_html|safe }}
+    </div>
+  </div>
+
+  <!-- Categorical Analysis -->
+  {% if results.categorical %}
+  <div class="result-card">
+    <h2 class="result-title">🗂️ Categorical Analysis</h2>
+    {% for cat in results.categorical %}
+      <h3 style="margin-top: 15px; color: var(--accent);">{{ cat.column }} ({{ cat.unique }} unique values)</h3>
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Value</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cat.top %}
+            <tr>
+              <td>{{ item.value }}</td>
+              <td>{{ item.count }}</td>
+              <td>{{ item.percent }}%</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   <!-- Heatmap -->
   {% if heatmap %}
-  <div class="card">
-    <h2>Correlation Heatmap</h2>
+  <div class="result-card">
+    <h2 class="result-title">🔗 Correlation Heatmap</h2>
     <img src="{{ url_for('static', filename=heatmap) }}" class="heatmap">
   </div>
   {% endif %}
+
+  <!-- Train ML Button -->
+  <div class="result-card" style="text-align: center;">
+    <h2 class="result-title">🤖 Ready for Machine Learning?</h2>
+    <p style="margin-bottom: 15px;">Train a prediction model directly on this cleaned dataset.</p>
+    <a href="/ml-config" class="back-btn" style="background: linear-gradient(to right, #3b82f6, #a855f7); color: white; padding: 12px 24px;">Train ML Model ⚡</a>
+  </div>
 
   <!-- Back Button -->
   <a href="/" class="back-btn">← Analyze Another Dataset</a>
 
 </div>
-
 </body>
 </html>

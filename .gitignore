@@ -8,3 +8,7 @@ venv/
 .venv/
 
 static/heatmap_*.png
+
+models/
+uploads/
+static/ml_plot_*.png

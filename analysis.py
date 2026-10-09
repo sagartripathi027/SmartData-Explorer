@@ -368,33 +368,33 @@ def analyze_data(df):
     df, fill_summary = handle_missing_values(df)
     report.append(fill_summary)
 
-    # 3. DATA PREPROCESSING 
+    # 3. DATA PREPROCESSING
     report.append(separator + "⚙️  DATA PREPROCESSING")
     df, preprocess_summary = preprocess_data(df)
     report.append(preprocess_summary)
 
-    # 4. EDA — CATEGORICAL ANALYSIS 
+    # 4. EDA — CATEGORICAL ANALYSIS
     report.append(separator + "🗂️  CATEGORICAL ANALYSIS")
     report.append(get_categorical_analysis(df))
 
-    # 5. STATISTICAL ANALYSIS 
+    # 5. STATISTICAL ANALYSIS
     report.append(separator + "📊 SUMMARY STATISTICS")
     report.append(get_summary_statistics(df))
 
     report.append(separator + "🔍 OUTLIER DETECTION  (IQR method)")
     report.append(detect_outliers(df))
 
-    # 6. CORRELATION ANALYSIS 
+    # 6. CORRELATION ANALYSIS
     report.append(separator + "🔗 CORRELATION MATRIX")
     report.append(get_correlation_matrix(df))
 
-    # 7. FINAL INSIGHTS 
+    # 7. FINAL INSIGHTS
     report.append(separator + "💡 FINAL INSIGHTS")
     report.append(generate_rule_based_insights(df))
 
     report.append("\n" + "=" * 50)
 
-    return "\n".join(report)
+    return "\n".join(report), df
 
 def generate_heatmap(df):
     import uuid
@@ -416,3 +416,87 @@ def generate_heatmap(df):
     fig.savefig(path)
 
     return filename
+
+
+def get_categorical_structured(df, top_n=5):
+    cat_cols = df.select_dtypes(exclude=[np.number]).columns
+    results = []
+    total = len(df)
+    for col in cat_cols:
+        unique = df[col].nunique()
+        top = df[col].value_counts().head(top_n)
+        top_list = []
+        for val, count in top.items():
+            pct = (count / total * 100) if total > 0 else 0
+            top_list.append({"value": str(val), "count": count, "percent": round(pct, 1)})
+        results.append({
+            "column": col,
+            "unique": unique,
+            "top": top_list
+        })
+    return results
+
+def get_outliers_structured(df):
+    numeric_df = df.select_dtypes(include=[np.number])
+    results = []
+    if numeric_df.empty:
+        return pd.DataFrame()
+    for col in numeric_df.columns:
+        q1 = numeric_df[col].quantile(0.25)
+        q3 = numeric_df[col].quantile(0.75)
+        iqr = q3 - q1
+        lower = q1 - 1.5 * iqr
+        upper = q3 + 1.5 * iqr
+        outlier_mask = (numeric_df[col] < lower) | (numeric_df[col] > upper)
+        count = outlier_mask.sum()
+        pct = (count / len(df) * 100) if len(df) > 0 else 0
+        results.append({
+            "Column": col,
+            "IQR Range": f"[{lower:.4f}, {upper:.4f}]",
+            "Outliers": count,
+            "Outliers (%)": round(pct, 1)
+        })
+    return pd.DataFrame(results)
+
+def analyze_data_structured(df):
+    """
+    Structured version of analyze_data.
+    Returns a dictionary of DataFrames and lists, and the cleaned DataFrame.
+    """
+    results = {}
+    total_rows, total_cols = df.shape
+    results['shape'] = {"rows": total_rows, "cols": total_cols}
+    # Dataset Overview (Missing before cleaning)
+    overview_df = pd.DataFrame({
+        "Column Name": df.columns,
+        "Data Type": df.dtypes.astype(str),
+        "Missing": df.isna().sum(),
+        "Missing (%)": (df.isna().sum() / max(len(df), 1) * 100).round(2)
+    })
+    results['overview_df'] = overview_df
+
+    # Cleaning
+    df, dup_summary = remove_duplicates(df)
+    results['dup_summary'] = dup_summary
+    df, fill_summary = handle_missing_values(df)
+    results['fill_summary'] = fill_summary
+    # Preprocessing
+    df, preprocess_summary = preprocess_data(df)
+    results['preprocess_summary'] = preprocess_summary
+    # Categorical Analysis
+    results['categorical'] = get_categorical_structured(df)
+    # Statistical Analysis
+    numeric_df = df.select_dtypes(include=[np.number])
+    if not numeric_df.empty:
+        stats_df = numeric_df.describe().T
+        stats_df["range"] = stats_df["max"] - stats_df["min"]
+        stats_df = stats_df.round(4)
+        results['stats_df'] = stats_df.reset_index().rename(columns={"index": "Column"})
+    else:
+        results['stats_df'] = pd.DataFrame()
+    results['outliers_df'] = get_outliers_structured(df)
+    # Final Insights
+    insights_str = generate_rule_based_insights(df)
+    # Split by newline and remove empty lines
+    results['insights'] = [line.strip().replace("⚠", "").replace("💡", "").replace("📈", "").replace("✅", "").replace("?", "").strip() for line in insights_str.split('\n') if line.strip()]
+    return results, df

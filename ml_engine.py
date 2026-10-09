@@ -1,1 +1,167 @@
-import pandas as pdimport numpy as npimport uuidimport osimport joblibimport matplotlibmatplotlib.use('Agg')import matplotlib.pyplot as pltimport seaborn as snsfrom sklearn.model_selection import train_test_splitfrom sklearn.pipeline import Pipelinefrom sklearn.compose import ColumnTransformerfrom sklearn.impute import SimpleImputerfrom sklearn.preprocessing import StandardScaler, OneHotEncoderfrom sklearn.ensemble import RandomForestClassifier, RandomForestRegressorfrom sklearn.metrics import accuracy_score, f1_score, confusion_matrix, r2_score, mean_squared_errordef train_ml_model(filepath, target_col, task_type):    try:        df = pd.read_csv(filepath)    except Exception as e:        return {"error": f"Error reading dataset: {str(e)}"}    if target_col not in df.columns:        return {"error": f"Target column '{target_col}' not found in dataset."}    df = df.dropna(subset=[target_col])    if len(df) < 50:        return {"error": "Insufficient valid rows for ML (need at least 50 valid target values)."}    X = df.drop(columns=[target_col])    y = df[target_col]    numeric_features = X.select_dtypes(include=['int64', 'float64']).columns.tolist()    categorical_features = X.select_dtypes(include=['object', 'category', 'bool']).columns.tolist()    # Safe strategy for high cardinality: Drop columns with > 50 unique categorical values.    # We document this by returning 'dropped_cols' in the results.    dropped_cols = []    final_cat_features = []    for col in categorical_features:        if X[col].nunique() > 50:            dropped_cols.append(col)        else:            final_cat_features.append(col)    X = X.drop(columns=dropped_cols)    categorical_features = final_cat_features    numeric_transformer = Pipeline(steps=[        ('imputer', SimpleImputer(strategy='mean')),        ('scaler', StandardScaler())    ])    categorical_transformer = Pipeline(steps=[        ('imputer', SimpleImputer(strategy='most_frequent')),        ('onehot', OneHotEncoder(handle_unknown='ignore'))    ])    preprocessor = ColumnTransformer(        transformers=[            ('num', numeric_transformer, numeric_features),            ('cat', categorical_transformer, categorical_features)        ])    if task_type == "classification":        if y.nunique() < 2:            return {"error": "Classification requires at least 2 unique classes in the target column."}        if y.nunique() > 20:            return {"error": "Classification target has too many unique classes. Did you mean Regression?"}        # Check smallest class count for stratified split        min_class_count = y.value_counts().min()        stratify = y if min_class_count >= 2 else None        try:            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=stratify)        except ValueError:            # Fallback if stratified fails            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)        model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1, max_depth=15)    else:        # Regression        if not pd.api.types.is_numeric_dtype(y):            # Attempt to convert or error            try:                if y.dtype == 'object':                    y = y.astype(str).str.strip().str.rstrip('%')                y = pd.to_numeric(y)            except ValueError:                return {"error": "Regression requires a numeric target column. Could not convert target to numeric."}        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)        model = RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1, max_depth=15)    pipeline = Pipeline(steps=[('preprocessor', preprocessor),                               ('model', model)])    pipeline.fit(X_train, y_train)    y_pred = pipeline.predict(X_test)    results = {        "dropped_cols": dropped_cols,        "task_type": task_type,        "target_col": target_col,        "test_size": len(X_test),        "train_size": len(X_train),        "feature_count": len(numeric_features) + len(categorical_features)    }    os.makedirs("static", exist_ok=True)    plot_filename = f"ml_plot_{uuid.uuid4().hex}.png"    plot_path = os.path.join("static", plot_filename)    if task_type == "classification":        results['accuracy'] = round(accuracy_score(y_test, y_pred), 4)        results['f1_score'] = round(f1_score(y_test, y_pred, average='weighted'), 4)        cm = confusion_matrix(y_test, y_pred)        plt.figure(figsize=(6,5))        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')        plt.title('Confusion Matrix')        plt.xlabel('Predicted')        plt.ylabel('Actual')        plt.tight_layout()        plt.savefig(plot_path)        plt.close()    else:        results['r2'] = round(r2_score(y_test, y_pred), 4)        results['rmse'] = round(np.sqrt(mean_squared_error(y_test, y_pred)), 4)        plt.figure(figsize=(6,5))        plt.scatter(y_test, y_pred, alpha=0.5, color='#3b82f6')        plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')        plt.title('Actual vs Predicted')        plt.xlabel('Actual')        plt.ylabel('Predicted')        plt.tight_layout()        plt.savefig(plot_path)        plt.close()    results['plot_url'] = plot_filename    # Save model    model_id = uuid.uuid4().hex    os.makedirs("models", exist_ok=True)    model_path = os.path.join("models", f"{model_id}.pkl")    joblib.dump(pipeline, model_path)    results['model_id'] = model_id    sample_df = pd.DataFrame({'Actual': y_test[:10].values, 'Predicted': y_pred[:10]})    results['sample_predictions_html'] = sample_df.to_html(classes="table", index=False)    return resultsdef get_columns_info(filepath):    """Return columns and an inference of their type for the ML config page."""    df = pd.read_csv(filepath)    cols = []    for col in df.columns:        cols.append({            "name": col,            "type": str(df[col].dtype),            "unique_count": df[col].nunique()        })    return cols
+import pandas as pd
+import numpy as np
+import uuid
+import os
+import joblib
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, r2_score, mean_squared_error
+
+def train_ml_model(filepath, target_col, task_type):
+    try:
+        df = pd.read_csv(filepath)
+    except Exception as e:
+        return {"error": f"Error reading dataset: {str(e)}"}
+
+    if target_col not in df.columns:
+        return {"error": f"Target column '{target_col}' not found in dataset."}
+
+    df = df.dropna(subset=[target_col])
+    if len(df) < 50:
+        return {"error": "Insufficient valid rows for ML (need at least 50 valid target values)."}
+
+    X = df.drop(columns=[target_col])
+    y = df[target_col]
+
+    numeric_features = X.select_dtypes(include=['int64', 'float64']).columns.tolist()
+    categorical_features = X.select_dtypes(include=['object', 'category', 'bool']).columns.tolist()
+
+    # Safe strategy for high cardinality: Drop columns with > 50 unique categorical values.
+    # We document this by returning 'dropped_cols' in the results.
+    dropped_cols = []
+    final_cat_features = []
+    for col in categorical_features:
+        if X[col].nunique() > 50:
+            dropped_cols.append(col)
+        else:
+            final_cat_features.append(col)
+
+    X = X.drop(columns=dropped_cols)
+    categorical_features = final_cat_features
+
+    numeric_transformer = Pipeline(steps=[
+        ('imputer', SimpleImputer(strategy='mean')),
+        ('scaler', StandardScaler())
+    ])
+    categorical_transformer = Pipeline(steps=[
+        ('imputer', SimpleImputer(strategy='most_frequent')),
+        ('onehot', OneHotEncoder(handle_unknown='ignore'))
+    ])
+
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ('num', numeric_transformer, numeric_features),
+            ('cat', categorical_transformer, categorical_features)
+        ])
+
+    if task_type == "classification":
+        if y.nunique() < 2:
+            return {"error": "Classification requires at least 2 unique classes in the target column."}
+        if y.nunique() > 20:
+            return {"error": "Classification target has too many unique classes. Did you mean Regression?"}
+
+        # Check smallest class count for stratified split
+        min_class_count = y.value_counts().min()
+        stratify = y if min_class_count >= 2 else None
+
+        try:
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=stratify)
+        except ValueError:
+            # Fallback if stratified fails
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        model = RandomForestClassifier(n_estimators=100, random_state=42, n_jobs=-1, max_depth=15)
+    else:
+        # Regression
+        if not pd.api.types.is_numeric_dtype(y):
+            # Attempt to convert or error
+            try:
+                if y.dtype == 'object':
+                    y = y.astype(str).str.strip().str.rstrip('%')
+                y = pd.to_numeric(y)
+            except ValueError:
+                return {"error": "Regression requires a numeric target column. Could not convert target to numeric."}
+
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        model = RandomForestRegressor(n_estimators=100, random_state=42, n_jobs=-1, max_depth=15)
+
+    pipeline = Pipeline(steps=[('preprocessor', preprocessor),
+                               ('model', model)])
+
+    pipeline.fit(X_train, y_train)
+    y_pred = pipeline.predict(X_test)
+
+    results = {
+        "dropped_cols": dropped_cols,
+        "task_type": task_type,
+        "target_col": target_col,
+        "test_size": len(X_test),
+        "train_size": len(X_train),
+        "feature_count": len(numeric_features) + len(categorical_features)
+    }
+
+    os.makedirs("static", exist_ok=True)
+    plot_filename = f"ml_plot_{uuid.uuid4().hex}.png"
+    plot_path = os.path.join("static", plot_filename)
+
+    if task_type == "classification":
+        results['accuracy'] = round(accuracy_score(y_test, y_pred), 4)
+        results['f1_score'] = round(f1_score(y_test, y_pred, average='weighted'), 4)
+
+        cm = confusion_matrix(y_test, y_pred)
+        plt.figure(figsize=(6,5))
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+        plt.title('Confusion Matrix')
+        plt.xlabel('Predicted')
+        plt.ylabel('Actual')
+        plt.tight_layout()
+        plt.savefig(plot_path)
+        plt.close()
+    else:
+        results['r2'] = round(r2_score(y_test, y_pred), 4)
+        results['rmse'] = round(np.sqrt(mean_squared_error(y_test, y_pred)), 4)
+
+        plt.figure(figsize=(6,5))
+        plt.scatter(y_test, y_pred, alpha=0.5, color='#3b82f6')
+        plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--')
+        plt.title('Actual vs Predicted')
+        plt.xlabel('Actual')
+        plt.ylabel('Predicted')
+        plt.tight_layout()
+        plt.savefig(plot_path)
+        plt.close()
+
+    results['plot_url'] = plot_filename
+
+    # Save model
+    model_id = uuid.uuid4().hex
+    os.makedirs("models", exist_ok=True)
+    model_path = os.path.join("models", f"{model_id}.pkl")
+    joblib.dump(pipeline, model_path)
+
+    results['model_id'] = model_id
+
+    sample_df = pd.DataFrame({'Actual': y_test[:10].values, 'Predicted': y_pred[:10]})
+    results['sample_predictions_html'] = sample_df.to_html(classes="table", index=False)
+
+    return results
+
+def get_columns_info(filepath):
+    """Return columns and an inference of their type for the ML config page."""
+    df = pd.read_csv(filepath)
+    cols = []
+    for col in df.columns:
+        cols.append({
+            "name": col,
+            "type": str(df[col].dtype),
+            "unique_count": df[col].nunique()
+        })
+    return cols

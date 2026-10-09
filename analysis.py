@@ -2,6 +2,8 @@
 
 import pandas as pd
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
@@ -407,10 +409,10 @@ def generate_heatmap(df):
     filename = f"heatmap_{uuid.uuid4().hex}.png"
     path = os.path.join("static", filename)
 
-    plt.figure(figsize=(8, 6))
-    sns.heatmap(numeric_df.corr(), annot=True, cmap="coolwarm")
+    fig = plt.Figure(figsize=(8, 6))
+    ax = fig.add_subplot(111)
+    sns.heatmap(numeric_df.corr(), annot=True, cmap="coolwarm", ax=ax)
 
-    plt.savefig(path)
-    plt.close()
+    fig.savefig(path)
 
-    return path
+    return filename

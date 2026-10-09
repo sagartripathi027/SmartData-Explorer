@@ -33,7 +33,7 @@
   {% if heatmap %}
   <div class="card">
     <h2>Correlation Heatmap</h2>
-    <img src="{{ url_for('static', filename=heatmap.split('static/')[-1]) }}" class="heatmap">
+    <img src="{{ url_for('static', filename=heatmap) }}" class="heatmap">
   </div>
   {% endif %}
 

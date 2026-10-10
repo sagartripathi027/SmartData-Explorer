@@ -25,6 +25,23 @@ It also provides a structured results dashboard, model download functionality, a
 
 > Note: The live application's available features may differ from the latest local development version.
 
+## 📸 Application Screenshots
+
+Here is a quick look at the SmartData Explorer workflow:
+
+| Data Upload & Dashboard | Automated EDA & Analysis |
+|:---:|:---:|
+| <img src="screenshots/home.png" alt="Dashboard" width="100%"> | <img src="screenshots/analysis.png" alt="Analysis Report" width="100%"> |
+
+| Correlation Heatmap | Machine Learning Results |
+|:---:|:---:|
+| <img src="screenshots/heatmap.png" alt="Correlation Heatmap" width="100%"> | <img src="screenshots/ml-training.png" alt="ML Metrics" width="100%"> |
+
+<p align="center">
+  <b>Sample Predictions & Model Download</b><br>
+  <img src="screenshots/predictions.png" alt="Predictions and Download" width="80%">
+</p>
+
 ## ✨ Key Features
 
 ### 📂 Data Upload & Preprocessing
